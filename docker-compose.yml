@@ -1,0 +1,23 @@
+# Infraestrutura alinhada à Aula 38 / Aula 52 (portas do material).
+# Redis 7.4.x e Elasticsearch 8.17.x.
+services:
+  redis:
+    image: redis:7.4.2
+    container_name: aula38-redis
+    ports:
+      - "56338:6379"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.3
+    container_name: aula38-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "59238:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200 >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
